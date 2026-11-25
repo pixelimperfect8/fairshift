@@ -1,0 +1,353 @@
+/* Only scan src for class names: public/ds holds built copies of the design systems. */
+@import "tailwindcss" source("..");
+
+/* Serious and plain: near-black ink, warm paper, one stamp blue.
+   Amber means a flag is open, green means a fix is logged. Nothing else is coloured. */
+@theme {
+  --color-ink: #0d1110;
+  --color-ink-2: #161c1a;
+  --color-ink-3: #222a27;
+  --color-paper: #f3f1ea;
+  --color-paper-2: #e9e6dc;
+  --color-card: #ffffff;
+
+  --color-blue: #2340ff;
+  --color-blue-deep: #1730d1;
+  --color-sky: #dfe4ff;
+  --color-flag: #f08a00;
+  --color-flag-soft: #fdeed6;
+  --color-fixed: #0c8f5e;
+  --color-fixed-soft: #dcf3e8;
+  --color-urgent: #d8362b;
+
+  --color-mute: rgb(13 17 16 / 0.62);
+  --color-mute-dark: rgb(243 241 234 / 0.62);
+  --color-line: rgb(13 17 16 / 0.12);
+  --color-line-dark: rgb(243 241 234 / 0.14);
+
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-newsreader), ui-serif, Georgia, serif;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --default-transition-duration: 300ms;
+  --default-transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --animate-dot: dot 1.2s ease-in-out infinite;
+  --animate-marquee: marquee 44s linear infinite;
+
+  @keyframes dot {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.35; }
+    30% { transform: translateY(-3px); opacity: 1; }
+  }
+  @keyframes marquee {
+    to { transform: translateX(-50%); }
+  }
+}
+
+@layer base {
+  html {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-text-size-adjust: 100%;
+    scrollbar-gutter: stable;
+  }
+  html, body {
+    overflow-x: clip;
+  }
+  body {
+    background: var(--color-paper);
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "ss01", "cv11";
+  }
+  ::selection {
+    background: var(--color-blue);
+    color: #fff;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  button {
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  .wrap {
+    width: 100%;
+    max-width: 78rem;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 4vw, 2.5rem);
+  }
+
+  /* Headlines: a text serif, set tight. */
+  .display {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    letter-spacing: -0.028em;
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+  .h2 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: clamp(2.1rem, 4.4vw, 3.6rem);
+    letter-spacing: -0.026em;
+    line-height: 1.05;
+    text-wrap: balance;
+  }
+  .lede {
+    font-size: clamp(1.02rem, 1.25vw, 1.2rem);
+    line-height: 1.55;
+    text-wrap: pretty;
+  }
+  .num {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    min-height: 3rem;
+    padding: 0 1.35rem;
+    border-radius: 999px;
+    font-weight: 500;
+    font-size: 0.98rem;
+    white-space: nowrap;
+    transition: background-color 0.25s, color 0.25s, transform 0.25s var(--ease-out);
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-blue { background: var(--color-blue); color: #fff; }
+  .btn-blue:hover { background: var(--color-blue-deep); }
+  .btn-ink { background: var(--color-ink); color: var(--color-paper); }
+  .btn-ink:hover { background: var(--color-ink-3); }
+  .btn-paper { background: var(--color-paper); color: var(--color-ink); }
+  .btn-paper:hover { background: #fff; }
+  .btn-ghost-dark { background: rgb(243 241 234 / 0.1); color: var(--color-paper); }
+  .btn-ghost-dark:hover { background: rgb(243 241 234 / 0.18); }
+  .btn-ghost { background: rgb(13 17 16 / 0.06); color: var(--color-ink); }
+  .btn-ghost:hover { background: rgb(13 17 16 / 0.11); }
+
+  /* Cards are flat: white on paper, no border and no shadow. */
+  .card {
+    background: var(--color-card);
+    border-radius: 1.25rem;
+  }
+  .panel {
+    background: var(--color-paper-2);
+    border-radius: 1.75rem;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    height: 1.7rem;
+    padding: 0 0.7rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .chip-flag { background: var(--color-flag-soft); color: #8a4d00; }
+  .chip-fixed { background: var(--color-fixed-soft); color: #06573a; }
+  .chip-blue { background: var(--color-sky); color: var(--color-blue-deep); }
+  .chip-plain { background: rgb(13 17 16 / 0.06); color: var(--color-ink); }
+  .chip-urgent { background: #fde3e0; color: #9c1f16; }
+
+  /* The dated stamp that closes a record. */
+  .stamp {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.8rem;
+    border-radius: 0.6rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-blue);
+    box-shadow: inset 0 0 0 1.5px currentColor;
+    transform: rotate(-2deg);
+  }
+
+  .range {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 2rem;
+    background: transparent;
+  }
+  .range::-webkit-slider-runnable-track {
+    height: 6px;
+    border-radius: 999px;
+    background: linear-gradient(to right, var(--color-paper) var(--fill, 50%), rgb(243 241 234 / 0.18) var(--fill, 50%));
+  }
+  .range::-moz-range-track {
+    height: 6px;
+    border-radius: 999px;
+    background: rgb(243 241 234 / 0.18);
+  }
+  .range::-moz-range-progress {
+    height: 6px;
+    border-radius: 999px;
+    background: var(--color-paper);
+  }
+  .range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 1.6rem;
+    height: 1.6rem;
+    margin-top: calc(3px - 0.8rem);
+    border-radius: 999px;
+    background: var(--color-blue);
+    box-shadow: 0 0 0 5px rgb(35 64 255 / 0.25);
+  }
+  .range::-moz-range-thumb {
+    width: 1.6rem;
+    height: 1.6rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--color-blue);
+    box-shadow: 0 0 0 5px rgb(35 64 255 / 0.25);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Version two (/v2): cinematic and people-first.                      */
+/* Black and white, with blue kept for buttons and small accents.      */
+/* Photographs all get the same black-and-white grade. Buttons and     */
+/* tags are squared. Unlayered on purpose, so these win over the       */
+/* utilities above.                                                    */
+/* ------------------------------------------------------------------ */
+.v2 {
+  --color-ink: #0a0a0a;
+  --color-ink-2: #141414;
+  --color-ink-3: #222222;
+  --color-paper: #f5f5f2;
+  --color-paper-2: #e8e8e4;
+  --color-mute: rgb(10 10 10 / 0.6);
+  --color-mute-dark: rgb(245 245 242 / 0.62);
+  --color-line: rgb(10 10 10 / 0.14);
+  --color-line-dark: rgb(245 245 242 / 0.16);
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+/* one rhythm for every section: the same space above and below */
+.v2 .sec {
+  padding-block: clamp(5rem, 9.5vw, 9rem);
+}
+/* and one gap between a section's heading and its content */
+.v2 .sec-body {
+  margin-top: clamp(3rem, 5.5vw, 5rem);
+}
+
+.v2 .btn,
+.v2 button.rounded-full,
+.v2 a.rounded-full {
+  border-radius: 0.5rem;
+}
+.v2 .btn {
+  min-height: 3.25rem;
+  padding-inline: 1.5rem;
+  font-weight: 500;
+}
+
+/* hairlines instead of cards */
+.v2 .rule-t { border-top: 1px solid var(--color-line); }
+.v2 .rule-b { border-bottom: 1px solid var(--color-line); }
+.v2 .on-dark .rule-t { border-top-color: var(--color-line-dark); }
+.v2 .on-dark .rule-b { border-bottom-color: var(--color-line-dark); }
+
+/* Photographs are shown as shot: the set was chosen to share one warm,
+   low-light look, so no grade is applied. To bring the black-and-white grade
+   back, set: filter: grayscale(1) contrast(1.12) brightness(0.88); */
+.v2 .bw {
+  filter: none;
+}
+
+/* film grain over photographs */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.18;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+/* a film subtitle */
+.subtitle {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 3.4vw, 3rem);
+  line-height: 1.14;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  text-shadow: 0 2px 30px rgb(0 0 0 / 0.6);
+}
+@keyframes kenburns {
+  from { transform: scale(1.02); }
+  to { transform: scale(1.12) translate(-1.2%, -1%); }
+}
+.kenburns { animation: kenburns 26s ease-out both; }
+
+/* the calculator's slider, on white */
+.v2 .range-ink::-webkit-slider-runnable-track {
+  background: linear-gradient(to right, var(--color-ink) var(--fill, 50%), rgb(10 10 10 / 0.14) var(--fill, 50%));
+  height: 2px;
+}
+.v2 .range-ink::-moz-range-track { background: rgb(10 10 10 / 0.14); height: 2px; }
+.v2 .range-ink::-moz-range-progress { background: var(--color-ink); height: 2px; }
+.v2 .range-ink::-webkit-slider-thumb { margin-top: calc(1px - 0.7rem); width: 1.4rem; height: 1.4rem; box-shadow: none; }
+.v2 .range-ink::-moz-range-thumb { width: 1.4rem; height: 1.4rem; box-shadow: none; }
+
+/* v2 type: a regular-weight grotesk set tight, as on the reference sites.
+   The serif stays for film subtitles only. */
+.v2 .display,
+.v2 .h2 {
+  font-family: var(--font-sans);
+  font-weight: 450;
+  letter-spacing: -0.045em;
+  line-height: 1.02;
+}
+.v2 .h2 { font-size: clamp(2.1rem, 4.6vw, 4rem); }
+.v2 .logo {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 1.3rem;
+  letter-spacing: -0.04em;
+}
+.v2 .subtitle { font-style: italic; }
+/* the quieter half of a two-tone headline */
+.v2 .dim { opacity: 0.42; }
+
+/* Hairline figures: black plate, white lines, blue for whatever is lit */
+.v2 .figure-dark {
+  --hairline-plate: #0a0a0a;
+  --hairline-hi: #5b74ff;
+  --hairline-edge: #e9e9e4;
+  --hairline-mid: #8a8a86;
+  --hairline-lo: #3a3a38;
+  --hairline-stroke: 1;
+}
+.v2 .figure-light {
+  --hairline-plate: #e8e8e4;
+  --hairline-hi: #2340ff;
+  --hairline-edge: #0a0a0a;
+  --hairline-mid: #6b6b68;
+  --hairline-lo: #b9b9b4;
+  --hairline-stroke: 1;
+}
+/* over a photograph the quiet half needs a little more presence */
+.v2 #top .dim, .v2 #demo .dim { opacity: 0.6; }

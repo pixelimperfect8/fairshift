@@ -1,0 +1,303 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* Payday: the design system behind the product-led FairShift site (v1).
+   Themed from DESIGN.md. Warm paper, near-black ink, one stamp blue. */
+
+@custom-variant dark (&:is(.dark *));
+
+/* Lets the design system page pin interaction states with data-preview="hover focus active". */
+@custom-variant hover {
+  @media (hover: hover) {
+    &:hover {
+      @slot;
+    }
+  }
+  &[data-preview~="hover"] {
+    @slot;
+  }
+}
+@custom-variant focus-visible (&:focus-visible, &[data-preview~="focus"]);
+@custom-variant active (&:active, &[data-preview~="active"]);
+
+@theme inline {
+  --font-heading: var(--font-sans);
+  --font-serif: var(--font-newsreader), ui-serif, Georgia, serif;
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  /* no monospace in this system: "mono" is the same sans */
+  --font-mono: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+
+  /* tokens without a shadcn slot */
+  --color-primary-active: var(--primary-active);
+  --color-accent-text: var(--accent-text);
+  --color-ink: var(--ink);
+  --color-paper: var(--paper);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-flag: var(--flag);
+  --color-fixed: var(--fixed);
+  --color-sky: var(--sky);
+
+  /* DESIGN.md radius step → the class the components use. */
+  --radius-sm: 6px; /* small marks */
+  --radius-md: 10px; /* item: menu and select items */
+  --radius-lg: 14px; /* inner tiles, code */
+  --radius-xl: 16px; /* text areas, menus, insets inside a card */
+  --radius-2xl: 20px; /* card */
+  --radius-3xl: 24px; /* panel */
+  --radius-4xl: 9999px; /* pill: buttons, fields, tags */
+}
+
+/* Flat: a card is white on paper with no shadow. Only floating layers take one. */
+@theme {
+  --shadow-xs: 0 0 #0000;
+  --shadow-sm: 0 0 #0000;
+  --shadow-md: 0 14px 34px -18px rgb(13 17 16 / 0.3);
+  --shadow-lg: 0 18px 40px -18px rgb(13 17 16 / 0.32);
+  --shadow-xl: 0 30px 60px -30px rgb(13 17 16 / 0.45);
+  --shadow-2xl: 0 30px 60px -30px rgb(13 17 16 / 0.45);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root {
+  --ink: #0d1110;
+  --paper: #f3f1ea;
+  --flag: #f08a00; /* amber fill: a flag is open */
+  --fixed: #0c8f5e; /* green fill: a fix is logged */
+  --sky: #dfe4ff; /* pale blue wash */
+
+  --background: #f3f1ea;
+  --foreground: #0d1110;
+  --card: #ffffff; /* white on paper, flat */
+  --card-foreground: #0d1110;
+  --popover: #ffffff;
+  --popover-foreground: #0d1110;
+  --primary: #2340ff;
+  --primary-foreground: #ffffff;
+  --primary-active: #1730d1;
+  --secondary: #0d1110; /* the ink button */
+  --secondary-foreground: #f3f1ea;
+  --muted: #e9e6dc; /* paper-2: the panel */
+  --muted-foreground: #5d605c;
+  --accent: #e9e6dc;
+  --accent-foreground: #0d1110;
+  --accent-text: #1730d1; /* blue as text on paper */
+  --destructive: #c42a20;
+  --success: #08724a; /* green as text */
+  --warning: #8a5200; /* amber as text */
+  --border: rgb(13 17 16 / 0.12);
+  --input: rgb(13 17 16 / 0.2);
+  --ring: #2340ff;
+  --chart-1: #2340ff;
+  --chart-2: #0d1110;
+  --chart-3: #f08a00;
+  --chart-4: #0c8f5e;
+  --chart-5: #b9b5a8;
+  --radius: 0.875rem;
+  --sidebar: #ece9e0;
+  --sidebar-foreground: #0d1110;
+  --sidebar-primary: #2340ff;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e0dcd0;
+  --sidebar-accent-foreground: #0d1110;
+  --sidebar-border: rgb(13 17 16 / 0.12);
+  --sidebar-ring: #2340ff;
+}
+
+/* The site's ink panels. Put className="dark" on any block for a dark band. */
+.dark {
+  --background: #0d1110;
+  --foreground: #f3f1ea;
+  --card: #161c1a;
+  --card-foreground: #f3f1ea;
+  --popover: #161c1a;
+  --popover-foreground: #f3f1ea;
+  --primary: #2340ff;
+  --primary-foreground: #ffffff;
+  --primary-active: #1730d1;
+  --secondary: #f3f1ea;
+  --secondary-foreground: #0d1110;
+  --muted: #222a27;
+  --muted-foreground: #a4a6a0;
+  --accent: #222a27;
+  --accent-foreground: #f3f1ea;
+  --accent-text: #8496ff;
+  --destructive: #ff7468;
+  --success: #45d79b;
+  --warning: #ffb547;
+  --border: rgb(243 241 234 / 0.14);
+  --input: rgb(243 241 234 / 0.24);
+  --ring: #8496ff;
+  --chart-1: #8496ff;
+  --chart-2: #f3f1ea;
+  --chart-3: #f08a00;
+  --chart-4: #45d79b;
+  --chart-5: #5a5f5b;
+  --sidebar: #121816;
+  --sidebar-foreground: #f3f1ea;
+  --sidebar-primary: #2340ff;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #222a27;
+  --sidebar-accent-foreground: #f3f1ea;
+  --sidebar-border: rgb(243 241 234 / 0.14);
+  --sidebar-ring: #8496ff;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+  }
+  html {
+    @apply font-sans;
+    scroll-behavior: smooth;
+    scroll-padding-top: 7.5rem;
+  }
+  h1, h2, h3, h4 {
+    text-wrap: balance;
+  }
+  p, li, dd {
+    text-wrap: pretty;
+  }
+  ::selection {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+}
+
+/* The type scale. Headings in a text serif, set tight; everything else in the sans. */
+@utility type-display {
+  font-family: var(--font-serif);
+  font-size: clamp(2.6rem, 6vw, 5.4rem);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.028em;
+}
+@utility type-heading {
+  font-family: var(--font-serif);
+  font-size: clamp(2.1rem, 4.4vw, 3.6rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.026em;
+}
+@utility type-step {
+  font-family: var(--font-serif);
+  font-size: clamp(1.7rem, 3.2vw, 2.8rem);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.024em;
+}
+@utility type-row {
+  font-family: var(--font-serif);
+  font-size: clamp(1.35rem, 2vw, 1.6rem);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+@utility type-lede {
+  font-size: clamp(1.02rem, 1.25vw, 1.2rem);
+  line-height: 1.55;
+}
+@utility type-body {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+@utility type-small {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+@utility type-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* Section rhythm. */
+@utility sec {
+  padding-block: clamp(6rem, 9vw, 9rem);
+}
+@utility sec-body {
+  margin-top: clamp(3rem, 4.5vw, 4rem);
+}
+@utility wrap {
+  width: 100%;
+  max-width: 78rem;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 2.5rem);
+}
+/* Film grain over a photograph: put it on the element that clips the picture. */
+@utility grain {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.18;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+}
+
+/* Focus: a solid 2px blue outline, offset, on actions. Fields keep their ring. */
+:is(button, a[href], [role="button"], [role="tab"], [role="checkbox"], [role="radio"], [role="switch"], [role="slider"]):is(:focus-visible, [data-preview~="focus"]) {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  --tw-ring-shadow: 0 0 #0000;
+}
+
+/* Number fields: the browser draws its up/down arrows on a white (or, in dark,
+   grey) plate. Blend the plate away so only the arrows show on the field. */
+:root { color-scheme: light; }
+.dark { color-scheme: dark; }
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  mix-blend-mode: multiply;
+  opacity: 0.7;
+}
+/* in dark, draw the light-scheme arrows, invert them, and blend the black plate away */
+.dark input[type="number"] {
+  color-scheme: light;
+}
+.dark input[type="number"]::-webkit-inner-spin-button,
+.dark input[type="number"]::-webkit-outer-spin-button {
+  filter: invert(1);
+  mix-blend-mode: screen;
+}

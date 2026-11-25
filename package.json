@@ -1,0 +1,12 @@
+{
+  "name": "fairshift",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install --prefix site && npm install --prefix design-systems/payday && npm install --prefix design-systems/shift",
+    "dev": "npm run dev --prefix site -- --port 3910",
+    "dev:ds:v1": "npm run dev --prefix design-systems/payday -- --port 3930",
+    "dev:ds:v2": "npm run dev --prefix design-systems/shift -- --port 3920",
+    "build:ds": "node scripts/build-ds.mjs",
+    "build": "npm run build:ds && npm run build --prefix site"
+  }
+}

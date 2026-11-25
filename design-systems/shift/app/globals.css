@@ -1,0 +1,296 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* Shift: the design system behind FairShift. Themed from DESIGN.md.
+   Black, white and one blue. Hex values are kept as the DESIGN.md gives them. */
+
+@custom-variant dark (&:is(.dark *));
+
+/* Lets the design system page pin interaction states with data-preview="hover focus active". */
+@custom-variant hover {
+  @media (hover: hover) {
+    &:hover {
+      @slot;
+    }
+  }
+  &[data-preview~="hover"] {
+    @slot;
+  }
+}
+@custom-variant focus-visible (&:focus-visible, &[data-preview~="focus"]);
+@custom-variant active (&:active, &[data-preview~="active"]);
+
+@theme inline {
+  --font-heading: var(--font-sans);
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  /* no monospace in this system: "mono" is the same sans */
+  --font-mono: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+
+  /* tokens without a shadcn slot */
+  --color-primary-active: var(--primary-active);
+  --color-accent-text: var(--accent-text);
+  --color-ink: var(--ink);
+  --color-paper: var(--paper);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+
+  /* DESIGN.md radius step → the class the components use. Nothing is a pill. */
+  --radius-sm: 4px; /* tag */
+  --radius-md: 6px; /* item: menu and select items */
+  --radius-lg: 8px; /* control */
+  --radius-xl: 8px; /* panel: cards, dialogs */
+  --radius-2xl: 8px; /* toasts, tab lists, nav triggers */
+  --radius-3xl: 12px; /* large previews */
+  --radius-4xl: 8px; /* maia's pill slot: buttons, inputs, badges become squared */
+}
+
+/* Flat: only floating layers take a shadow. */
+@theme {
+  --shadow-xs: 0 0 #0000;
+  --shadow-sm: 0 0 #0000;
+  --shadow-md: 0 14px 34px -18px rgb(0 0 0 / 0.3);
+  --shadow-lg: 0 18px 40px -18px rgb(0 0 0 / 0.35);
+  --shadow-xl: 0 30px 60px -30px rgb(0 0 0 / 0.5);
+  --shadow-2xl: 0 30px 60px -30px rgb(0 0 0 / 0.5);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root {
+  --ink: #0a0a0a;
+  --paper: #f5f5f2;
+
+  --background: #f5f5f2;
+  --foreground: #0a0a0a;
+  --card: #e8e8e4; /* the inset panel */
+  --card-foreground: #0a0a0a;
+  --popover: #f5f5f2;
+  --popover-foreground: #0a0a0a;
+  --primary: #2340ff;
+  --primary-foreground: #ffffff;
+  --primary-active: #1730d1;
+  --secondary: #0a0a0a; /* the ink button */
+  --secondary-foreground: #f5f5f2;
+  --muted: #e8e8e4;
+  --muted-foreground: #5f5f5c;
+  --accent: #e8e8e4;
+  --accent-foreground: #0a0a0a;
+  --accent-text: #1730d1; /* blue as text on paper */
+  --destructive: #c8261b;
+  --success: #0c7a50;
+  --warning: #8a5200;
+  --border: rgb(10 10 10 / 0.14);
+  --input: rgb(10 10 10 / 0.22);
+  --ring: #2340ff;
+  --chart-1: #2340ff;
+  --chart-2: #0a0a0a;
+  --chart-3: #6b6b68;
+  --chart-4: #b9b9b4;
+  --chart-5: #6f86ff;
+  --radius: 0.5rem;
+  --sidebar: #efefec;
+  --sidebar-foreground: #0a0a0a;
+  --sidebar-primary: #2340ff;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e2e2de;
+  --sidebar-accent-foreground: #0a0a0a;
+  --sidebar-border: rgb(10 10 10 / 0.14);
+  --sidebar-ring: #2340ff;
+}
+
+/* Derived from the system's ink sections. Put className="dark" on any section for a dark band. */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #f5f5f2;
+  --card: #141414;
+  --card-foreground: #f5f5f2;
+  --popover: #141414;
+  --popover-foreground: #f5f5f2;
+  --primary: #2340ff;
+  --primary-foreground: #ffffff;
+  --primary-active: #1730d1;
+  --secondary: #f5f5f2;
+  --secondary-foreground: #0a0a0a;
+  --muted: #1c1c1c;
+  --muted-foreground: #a3a39f;
+  --accent: #222222;
+  --accent-foreground: #f5f5f2;
+  --accent-text: #6f86ff; /* blue words and lines on black */
+  --destructive: #ff6f61;
+  --success: #3ddc97;
+  --warning: #ffb938;
+  --border: rgb(245 245 242 / 0.16);
+  --input: rgb(245 245 242 / 0.24);
+  --ring: #6f86ff;
+  --chart-1: #6f86ff;
+  --chart-2: #f5f5f2;
+  --chart-3: #a3a39f;
+  --chart-4: #55554f;
+  --chart-5: #2340ff;
+  --sidebar: #101010;
+  --sidebar-foreground: #f5f5f2;
+  --sidebar-primary: #2340ff;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1c1c1c;
+  --sidebar-accent-foreground: #f5f5f2;
+  --sidebar-border: rgb(245 245 242 / 0.16);
+  --sidebar-ring: #6f86ff;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+  }
+  html {
+    @apply font-sans;
+    scroll-behavior: smooth;
+    scroll-padding-top: 7.5rem;
+  }
+  h1, h2, h3, h4 {
+    text-wrap: balance;
+  }
+  p, li, dd {
+    text-wrap: pretty;
+  }
+  ::selection {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+}
+
+/* The type scale. One family, regular weight, set tight. */
+@utility type-display {
+  font-size: clamp(2.4rem, 6vw, 5.4rem);
+  font-weight: 450;
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+}
+@utility type-heading {
+  font-size: clamp(2.1rem, 4.6vw, 4rem);
+  font-weight: 450;
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+}
+@utility type-step {
+  font-size: clamp(1.7rem, 3vw, 2.7rem);
+  font-weight: 450;
+  line-height: 1.08;
+  letter-spacing: -0.045em;
+}
+@utility type-row {
+  font-size: clamp(1.3rem, 2.2vw, 1.8rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+@utility type-lede {
+  font-size: clamp(1.02rem, 1.25vw, 1.2rem);
+  line-height: 1.55;
+}
+@utility type-body {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+@utility type-small {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+@utility type-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* The quiet half of a two-tone headline. */
+@utility dim {
+  opacity: 0.42;
+}
+/* Section rhythm. */
+@utility sec {
+  padding-block: clamp(5rem, 9.5vw, 9rem);
+}
+@utility sec-body {
+  margin-top: clamp(3rem, 5.5vw, 5rem);
+}
+@utility wrap {
+  width: 100%;
+  max-width: 78rem;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 2.5rem);
+}
+/* Film grain over a photograph: put it on the element that clips the picture. */
+@utility grain {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.18;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+}
+
+/* Focus: a solid 2px blue outline, offset, on actions. Fields keep their ring. */
+:is(button, a[href], [role="button"], [role="tab"], [role="checkbox"], [role="radio"], [role="switch"], [role="slider"]):is(:focus-visible, [data-preview~="focus"]) {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  --tw-ring-shadow: 0 0 #0000;
+}
+
+/* Number fields: the browser draws its up/down arrows on a white (or, in dark,
+   grey) plate. Blend the plate away so only the arrows show on the field. */
+:root { color-scheme: light; }
+.dark { color-scheme: dark; }
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  mix-blend-mode: multiply;
+  opacity: 0.7;
+}
+/* in dark, draw the light-scheme arrows, invert them, and blend the black plate away */
+.dark input[type="number"] {
+  color-scheme: light;
+}
+.dark input[type="number"]::-webkit-inner-spin-button,
+.dark input[type="number"]::-webkit-outer-spin-button {
+  filter: invert(1);
+  mix-blend-mode: screen;
+}
