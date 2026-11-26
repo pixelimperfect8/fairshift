@@ -13,14 +13,6 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group"
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { toast } from "@/components/ui/toast"
 
 import { addDaysISO, formatDate, plural, todayISO } from "../_lib/data"
@@ -47,11 +39,6 @@ export function Dashboard({ state }: { state: State }) {
   const addressedThisMonth = concerns.filter(
     (c) => c.addressedOn && c.addressedOn >= monthAgo
   ).length
-
-  const paydayItems = [
-    { value: ALL, label: "All paydays" },
-    ...paydays.map((p) => ({ value: p.iso, label: formatDate(p.iso, "short") })),
-  ]
 
   const q = query.trim().toLowerCase()
   const shown = concerns.filter(
@@ -201,38 +188,18 @@ export function Dashboard({ state }: { state: State }) {
                 ? "Every concern raised, from all paydays."
                 : `Concerns raised in the ${formatDate(payday, "short")} check-in.`}
             </p>
-            <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-              <InputGroup className="flex-1">
-                <InputGroupInput
-                  type="search"
-                  aria-label="Search your record"
-                  placeholder="Search by concern, location, person or date"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                />
-                <InputGroupAddon>
-                  <HugeiconsIcon icon={Search01Icon} strokeWidth={2} />
-                </InputGroupAddon>
-              </InputGroup>
-              <Select
-                items={paydayItems}
-                value={payday}
-                onValueChange={(v) => setPayday((v as string) ?? ALL)}
-              >
-                <SelectTrigger aria-label="Filter by payday" className="w-full sm:w-40">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {paydayItems.map((p) => (
-                      <SelectItem key={p.value} value={p.value}>
-                        {p.label}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
+            <InputGroup className="mt-4">
+              <InputGroupInput
+                type="search"
+                aria-label="Search your record"
+                placeholder="Search by concern, location, person or date"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+              <InputGroupAddon>
+                <HugeiconsIcon icon={Search01Icon} strokeWidth={2} />
+              </InputGroupAddon>
+            </InputGroup>
 
             {shown.length === 0 ? (
               <div className="mt-4 border-y py-8">
