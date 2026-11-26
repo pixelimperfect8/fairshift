@@ -1,32 +1,19 @@
 "use client"
 
-import { useState } from "react"
 import Link from "next/link"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { ArrowRight01Icon, Search01Icon } from "@hugeicons/core-free-icons"
+import { ArrowRight01Icon } from "@hugeicons/core-free-icons"
 
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group"
-import { toast } from "@/components/ui/toast"
 
+import { Dashboard } from "./_components/dashboard"
 import { nextStep, rosterReady, stepHref } from "./_components/shell"
-import {
-  addDaysISO,
-  formatDate,
-  formatShort,
-  plural,
-  previousPaydayISO,
-} from "./_lib/data"
-import { setState, usePrototype, type State } from "./_lib/store"
+import { plural } from "./_lib/data"
+import { usePrototype, type State } from "./_lib/store"
 
 export default function DashboardPage() {
   const state = usePrototype()
-  return state.live ? <SetUp state={state} /> : <FirstVisit state={state} />
+  return state.live ? <Dashboard state={state} /> : <FirstVisit state={state} />
 }
 
 // ---- first visit -------------------------------------------------------------
@@ -156,216 +143,5 @@ function StepRow({
         <div className="flex items-center gap-4 py-4">{body}</div>
       )}
     </li>
-  )
-}
-
-// ---- set up ------------------------------------------------------------------
-
-// What the dashboard looks like once a payday has gone by. The results are
-// sample ones, worked out from the roster so the numbers agree with each other.
-function SetUp({ state }: { state: State }) {
-  const { profile, workers, sampleAddressed } = state
-  const [query, setQuery] = useState("")
-  const total = workers.length
-  const lastPayday = previousPaydayISO(profile.nextPayday, profile.schedule)
-  const day = (offset: number) => formatDate(addDaysISO(lastPayday, offset), "short")
-
-  // who answered, by location: the people who stayed quiet come off the biggest crews first
-  const byLocation = profile.locations
-    .map((l) => ({
-      name: l.name,
-      total: workers.filter((w) => w.location === l.name).length,
-      quiet: 0,
-    }))
-    .filter((l) => l.total > 0)
-  let quiet = total > 1 ? Math.max(1, Math.round(total * 0.16)) : 0
-  const answered = total - quiet
-  for (; quiet > 0 && byLocation.length; quiet--) {
-    const crew = [...byLocation].sort((a, b) => b.total - b.quiet - (a.total - a.quiet))[0]
-    crew.quiet++
-  }
-  const firstLocation = byLocation[0]?.name ?? ""
-  const secondLocation = byLocation[1]?.name ?? firstLocation
-
-  const open = sampleAddressed ? 0 : 1
-  const addressedCount = sampleAddressed ? 4 : 3
-
-  const openConcern = {
-    what: `Two people at ${firstLocation} said they missed a meal break on ${day(-2)}.`,
-    next: "Add one hour of premium pay for each of them to the next check, then go over that day's schedule with the crew lead.",
-  }
-  const record = [
-    ...(sampleAddressed
-      ? [
-          {
-            what: "Missed meal breaks",
-            where: firstLocation,
-            did: "Premium pay added to the next check. Schedule reviewed with the crew lead.",
-            when: formatShort(new Date()),
-          },
-        ]
-      : []),
-    {
-      what: "Overtime missing from one check",
-      where: secondLocation,
-      did: "Hours corrected and paid on the next check.",
-      when: day(-6),
-    },
-    {
-      what: "Drinking water ran low by mid-afternoon",
-      where: firstLocation,
-      did: "Second water cooler added to the crew truck.",
-      when: day(-9),
-    },
-    {
-      what: "Torn shade canopy",
-      where: firstLocation,
-      did: "Canopy replaced the same day.",
-      when: day(-14),
-    },
-  ]
-
-  const q = query.trim().toLowerCase()
-  const shownRecord = q
-    ? record.filter((a) =>
-        [a.what, a.where, a.did, a.when, profile.contactName]
-          .join(" ")
-          .toLowerCase()
-          .includes(q)
-      )
-    : record
-
-  return (
-    <>
-      <div className="fs-band">
-        <div className="fs-wrap py-12 sm:py-16">
-          <p className="type-small text-muted-foreground">
-            {profile.name} · payday check-in, {formatDate(lastPayday)}
-          </p>
-          <h1 className="type-heading mt-3 max-w-[52rem]">
-            {answered} of {total} answered.{" "}
-            <span className="dim">
-              {open ? `${plural(open, "concern", "concerns")} open.` : "No concerns open."}{" "}
-              {addressedCount} addressed this month.
-            </span>
-          </h1>
-          <p className="type-lede mt-6 max-w-[40rem] text-muted-foreground">
-            The next check-in goes out {formatDate(profile.nextPayday)} to{" "}
-            {plural(total, "worker", "workers")}.
-          </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Button
-              variant="outline"
-              nativeButton={false}
-              render={<Link href="/app/setup/workers" />}
-            >
-              Edit roster
-            </Button>
-            <Button
-              variant="outline"
-              nativeButton={false}
-              render={<Link href="/app/setup/business" />}
-            >
-              Edit business profile
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      <main className="fs-wrap py-12 sm:py-16">
-        {!sampleAddressed && (
-          <section aria-label="Open concern" className="mb-14 rounded-xl bg-card p-6 sm:p-8">
-            <Badge variant="warning">Open</Badge>
-            <p className="type-row mt-4 max-w-[44rem]">{openConcern.what}</p>
-            <div className="mt-6 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-              <div className="max-w-[36rem]">
-                <p className="type-label">Suggested next step</p>
-                <p className="type-body mt-1 text-muted-foreground">{openConcern.next}</p>
-              </div>
-              <Button
-                className="shrink-0"
-                onClick={() => {
-                  setState((s) => ({ ...s, sampleAddressed: true }))
-                  toast.add({
-                    type: "success",
-                    title: "Marked as addressed",
-                    description: "Saved to your record with your name and today's date.",
-                  })
-                }}
-              >
-                Mark as addressed
-              </Button>
-            </div>
-          </section>
-        )}
-
-        <div className="grid gap-x-16 gap-y-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)]">
-          <section aria-labelledby="who-answered">
-            <h2 id="who-answered" className="type-row">
-              Who answered
-            </h2>
-            <dl className="mt-4 border-t">
-              {byLocation.map((l) => (
-                <div key={l.name} className="flex items-baseline justify-between gap-4 border-b py-4">
-                  <dt className="type-label">{l.name}</dt>
-                  <dd className="type-small text-muted-foreground tabular-nums">
-                    {l.total - l.quiet} of {l.total}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </section>
-
-          <section aria-labelledby="your-record">
-            <h2 id="your-record" className="type-row">
-              Your record
-            </h2>
-            <InputGroup className="mt-4">
-              <InputGroupInput
-                type="search"
-                aria-label="Search your record"
-                placeholder="Search by concern, location, person or date"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-              />
-              <InputGroupAddon>
-                <HugeiconsIcon icon={Search01Icon} strokeWidth={2} />
-              </InputGroupAddon>
-            </InputGroup>
-            {shownRecord.length === 0 && (
-              <div className="mt-4 border-y py-8">
-                <p className="type-body">
-                  Nothing in your record matches &ldquo;{query.trim()}&rdquo;.
-                </p>
-                <p className="type-small mt-1 text-muted-foreground">
-                  Check the spelling, or clear the search to see everything.
-                </p>
-                <Button variant="outline" className="mt-4" onClick={() => setQuery("")}>
-                  Clear search
-                </Button>
-              </div>
-            )}
-            <ul className={shownRecord.length ? "mt-1" : "hidden"}>
-              {shownRecord.map((a) => (
-                <li
-                  key={a.what}
-                  className="flex items-start justify-between gap-4 border-b py-4"
-                >
-                  <div className="min-w-0">
-                    <p className="type-label">{a.what}</p>
-                    <p className="type-small mt-0.5 text-muted-foreground">
-                      {a.where} · {a.did} {profile.contactName}, {a.when}.
-                    </p>
-                  </div>
-                  <Badge variant="success" className="mt-0.5">
-                    Addressed
-                  </Badge>
-                </li>
-              ))}
-            </ul>
-          </section>
-        </div>
-      </main>
-    </>
   )
 }
