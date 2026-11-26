@@ -10,6 +10,7 @@ import { CountUp, Tween } from "@/components/bits";
 import Photo from "@/components/v2/Photo";
 import { Box } from "@/components/v2/Iso";
 import { TwoTone, Up } from "@/components/v2/Type";
+import { useVariant } from "@/components/v2/variant";
 
 /** The block every section opens with: a title on the left, a short paragraph on the right. */
 function Head({ title, dim, body, dark = false }: { title: string; dim?: string; body?: string; dark?: boolean }) {
@@ -36,7 +37,7 @@ function StepText({ i }: { i: number }) {
   return (
     <>
       <h3 className="display text-[clamp(1.7rem,3vw,2.7rem)] !leading-[1.08]">
-        <span className="text-[#6f86ff]">{s.lead}</span> {s.rest}
+        <span className="text-(--v2-accent)">{s.lead}</span> {s.rest}
       </h3>
       <p className="mt-5 max-w-[26rem] text-[1.02rem] leading-relaxed text-mute-dark">{s.body}</p>
     </>
@@ -188,7 +189,7 @@ export function BigStat() {
 export function Languages() {
   const g = [...features.greetings, ...features.greetings];
   return (
-    <section aria-label="Works in the language your team speaks" className="rule-t rule-b overflow-hidden py-[clamp(2rem,3.5vw,3rem)]">
+    <section aria-label="Works in the language your team speaks" className="langs rule-t rule-b overflow-hidden py-[clamp(2rem,3.5vw,3rem)]">
       <div className="flex w-max animate-marquee items-baseline gap-14 hover:[animation-play-state:paused]" style={{ animationDuration: "70s" }}>
         {g.map((x, i) => (
           <p key={i} lang={["en", "es", "zh", "tl", "vi", "ko"][i % 6]} aria-hidden={i >= 6} className="display flex items-baseline gap-4 whitespace-nowrap text-[clamp(1.7rem,3.6vw,3.2rem)]">
@@ -209,7 +210,7 @@ const CAP = 0.15;
 const RATE = 2.83;
 const FLAT = 49;
 const TALLEST = PENALTY * 250 * 52;
-const PANEL = "#e8e8e4";
+const PANEL = "var(--color-paper-2)";
 
 export function MathV2() {
   const [n, setN] = useState(50);
@@ -304,7 +305,7 @@ export function WhoV2() {
                 </div>
 
                 <span aria-hidden className="pt-[0.2em] text-[clamp(1.9rem,4.6vw,3.8rem)] leading-none lg:col-span-1 lg:col-start-12 lg:row-start-1 lg:justify-self-end">
-                  <ArrowUpRight size={26} strokeWidth={1.3} className={`transition-transform duration-500 ${open ? "rotate-90 text-[#6f86ff]" : ""}`} />
+                  <ArrowUpRight size={26} strokeWidth={1.3} className={`transition-transform duration-500 ${open ? "rotate-90 text-(--v2-accent)" : ""}`} />
                 </span>
 
                 <div className="col-span-2 lg:col-span-4 lg:col-start-8 lg:row-start-1">
@@ -334,12 +335,13 @@ export function WhoV2() {
 /* ------------------------------------------------------------------ */
 export function Trades() {
   const still = useStill();
-  const items = v3.trades.items;
+  const trades = useVariant().trades;
+  const items = trades.items;
   const row = still ? items : [...items, ...items];
   return (
     <section className="sec overflow-hidden">
       <div className="wrap">
-        <Head title={v3.trades.title} body={v2.industries.body} />
+        <Head title={trades.title} body={trades.body} />
       </div>
       <div className={`sec-body flex gap-3 ${still ? "overflow-x-auto px-5" : "w-max animate-marquee hover:[animation-play-state:paused]"}`} style={{ animationDuration: "80s" }}>
         {row.map((x, i) => (
@@ -465,10 +467,11 @@ export function FaqV2() {
 /* ------------------------------------------------------------------ */
 export function ClosingV2() {
   const c = v2.closing;
+  const shot = useVariant().closing;
   return (
     <section id="demo" className="grain relative isolate overflow-hidden bg-ink text-paper">
       <div className="absolute inset-0 -z-10">
-        <Photo id={c.photo} alt={c.alt} />
+        <Photo id={shot.photo} alt={shot.alt} />
         <div className="absolute inset-0 bg-ink/60" />
         <div className="absolute inset-0 bg-[linear-gradient(to_top,rgb(10_10_10/1),transparent_70%)]" />
       </div>

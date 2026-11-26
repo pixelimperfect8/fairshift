@@ -8,7 +8,7 @@ This is the marketing site only. The product is not built here.
 
 | Folder | What it is | Local address |
 | --- | --- | --- |
-| `site/` | The landing page. Version 1 is at `/`, version 2 is at `/v2`. | http://localhost:3910 |
+| `site/` | The landing page. Version 1 is at `/`, version 2 is at `/v2`, and version 2-A (v2 in daylight, with mixed trades) is at `/v2a`. | http://localhost:3910 |
 | `design-systems/payday/` | The design system for version 1. | http://localhost:3930 |
 | `design-systems/shift/` | The design system for version 2. | http://localhost:3920 |
 | `scripts/build-ds.mjs` | Builds both design systems into `site/public/ds`. | |

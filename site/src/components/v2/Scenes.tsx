@@ -2,13 +2,12 @@
 
 import { useRef, useState } from "react";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
-import { v2 } from "@/lib/content";
 import { ease, useStill } from "@/lib/motion";
 import Photo from "@/components/v2/Photo";
 import { TwoTone } from "@/components/v2/Type";
+import { useVariant, type Variant } from "@/components/v2/variant";
 
-const S = v2.scenes.items;
-type Scene = (typeof S)[number];
+type Scene = Variant["scenes"][number];
 
 /** The question, and the reply as the blue bubble an employee's text would be. */
 function Words({ s }: { s: Scene }) {
@@ -30,6 +29,7 @@ function Shade() {
 export default function Scenes() {
   const ref = useRef<HTMLDivElement>(null);
   const still = useStill();
+  const S = useVariant().scenes;
   const [on, setOn] = useState(0);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   useMotionValueEvent(scrollYProgress, "change", (v) => setOn(Math.min(S.length - 1, Math.max(0, Math.floor(v * S.length)))));

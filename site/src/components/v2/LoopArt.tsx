@@ -98,8 +98,8 @@ export default function LoopArt({ name, active, className = "" }: { name: keyof 
         <motion.g key={gi} initial={false} animate={still || !active || !g.bob ? { y: 0 } : { y: [0, -g.bob, 0] }} transition={still || !active || !g.bob ? { duration: 0.4 } : { duration: 4.5 + gi * 0.6, repeat: Infinity, ease: "easeInOut" }}>
           {g.parts.map((p, pi) => {
             const i = n++;
-            const stroke = p.accent ? "#6f86ff" : p.quiet || p.dashed ? "#77776f" : "#e9e9e4";
-            const common = { d: p.d, stroke, strokeWidth: p.accent ? 1 : 0.8, fill: p.plate ? "#0a0a0a" : "none" };
+            const stroke = p.accent ? "var(--v2-accent)" : p.quiet || p.dashed ? "var(--v2-quiet)" : "var(--v2-edge)";
+            const common = { d: p.d, stroke, strokeWidth: p.accent ? 1 : 0.8, fill: p.plate ? "var(--v2-plate)" : "none" };
             if (p.dashed) return <motion.path key={pi} {...common} strokeDasharray="2 3" initial={false} animate={{ opacity: active ? 1 : 0 }} transition={{ duration: 0.5, delay: active ? 0.7 : 0 }} />;
             if (still) return <path key={pi} {...common} />;
             return (

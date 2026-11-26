@@ -589,3 +589,40 @@ export const people = {
     },
   ],
 };
+
+// v2-A: the daylight variant of v2. Same sections and copy, a lighter palette,
+// and photographs from more than one trade, chosen to match the kitchen set:
+// warm, candid, people mid-task.
+export const v2a = {
+  hero: {
+    bright: "Your team has something to tell you.",
+    dim: "FairShift asks for you, every payday.",
+    body: "Three questions by text, to every crew you run: the kitchen, the workshop, the route. One page telling you what to fix, and a dated record showing you asked, listened and fixed it.",
+    shots: [
+      { photo: "1651977560788-98792cd34da0", alt: "A line cook working at a busy restaurant counter", label: "Kitchen crews" },
+      { photo: "1687422810663-c316494f725a", alt: "A carpenter smiling at his bench in a timber workshop", label: "Field and shop crews" },
+      { photo: "1764745222277-89b2d45381b3", alt: "A courier cycling through the city with a delivery bag", label: "Drivers and contractors" },
+    ],
+  },
+  scenes: [
+    { photo: "1637652918719-a32a2c187b9b", alt: "A cook in a cap preparing food at a restaurant counter" },
+    { photo: "1601001815894-4bb6c81416d7", alt: "A gardener tending raised planter boxes" },
+    { photo: "1609348632802-b952f368fc3a", alt: "A welder kneeling over a job in a workshop" },
+  ],
+  trades: {
+    title: "For the people who work on their feet.",
+    body: "Kitchens, workshops, job sites and routes. Wherever the work happens out of your sight, an owner is least likely to hear about a problem in time.",
+    items: [
+      { photo: "1576704546872-8d647cd96f8d", alt: "A cook working over steam in a busy open kitchen", name: "Kitchens" },
+      { photo: "1676018366904-c083ed678e60", alt: "A mechanic at the bench in a warmly lit garage", name: "Garages" },
+      { photo: "1745267652572-573ae6e81e40", alt: "A builder in a hard hat working in low light on site", name: "Job sites" },
+      { photo: "1626906722163-bd4c03cb3b9b", alt: "Farm workers picking a crop by hand", name: "Fields" },
+      { photo: "1764745222236-42ba3e0733b9", alt: "A courier riding through city traffic with a delivery bag", name: "Delivery" },
+      { photo: "1736955075954-fba0a07c5118", alt: "A driver at the wheel of a truck", name: "Drivers" },
+      { photo: "1605497787865-e6d4762b386f", alt: "A barber drying a client's hair under warm lights", name: "Salons" },
+      { photo: "1730584474338-aa8d9d186bf7", alt: "A worker at a machine on a factory floor", name: "Factories" },
+      { photo: "1616983860713-4634026e83dd", alt: "A florist arranging stems in her shop", name: "Shops" },
+    ],
+  },
+  closing: { photo: "1626712211690-8de4fe30177c", alt: "A driver's face in the wing mirror of his truck" },
+};
