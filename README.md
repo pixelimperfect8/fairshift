@@ -2,7 +2,7 @@
 
 The FairShift landing page in two design directions, with the design system behind each. FairShift is a payday check-in for hourly teams: it texts employees three questions each pay period and gives the owner one page of what to fix.
 
-This is the marketing site only. The product is not built here.
+This is the marketing site, plus a clickable prototype of employer onboarding. The product itself is not built here.
 
 ## What is in this folder
 
@@ -11,6 +11,7 @@ This is the marketing site only. The product is not built here.
 | `site/` | The landing page. Version 1 is at `/`, version 2 is at `/v2`, and version 2-A (v2 in daylight, with mixed trades) is at `/v2a`. | http://localhost:3910 |
 | `design-systems/payday/` | The design system for version 1. | http://localhost:3930 |
 | `design-systems/shift/` | The design system for version 2. | http://localhost:3920 |
+| `design-systems/shift/app/app/` | The employer onboarding prototype, built from the Shift components. | http://localhost:3920/app |
 | `scripts/build-ds.mjs` | Builds both design systems into `site/public/ds`. | |
 
 **Version 1** is product-led: warm paper, serif headlines, pill buttons, flat white cards, with product shots and photographs side by side.
@@ -42,6 +43,37 @@ After changing a design system, rebuild the copies the site serves:
 ```bash
 npm run build:ds
 ```
+
+## The onboarding prototype
+
+A clickable walkthrough of how a new employer sets up FairShift. It is a prototype: no backend, no sign-in, sample data only. It lives inside the Shift design system so it uses the real themed components.
+
+```bash
+npm run dev:ds:v2
+```
+
+Then open http://localhost:3920/app.
+
+| Screen | Address | What it shows |
+| --- | --- | --- |
+| Dashboard, first visit | `/app` | An empty state that points to the two setup steps. |
+| Business profile | `/app/setup/business` | Name, industry, locations, payday schedule, next payday, and who hears about concerns. |
+| Add workers | `/app/setup/workers` | Upload a CSV (match columns, preview rows) or add one person by hand, ending on a searchable roster. |
+| Review and turn on | `/app/setup/review` | A summary and the payday text in English and Spanish. |
+| Dashboard, set up | `/app` | The latest check-in, any open concern, past paydays and the record. |
+
+- **State** is kept in the browser's localStorage. "Start over" in the header clears it.
+- **Sample data:** "Fill in sample details" and "Use the sample file" load a made-up farm, Lindero Verde Farms. The past paydays and the record are generated from the roster in `_lib/history.ts`.
+- **Palette:** the prototype wears the version 2-A light palette, scoped to its own wrapper in `prototype.css`, so the design system page at `/` is unchanged.
+- **One-page build:** building with `NEXT_PUBLIC_PROTOTYPE_SINGLE=1` keeps every screen on one page and switches between them with the URL hash. Use it for a copy that has to run as a single static file.
+
+Where things are, under `design-systems/shift/app/app`:
+
+- `page.tsx` and `setup/*/page.tsx`: the screens.
+- `_components`: the shell (header, setup progress, pinned actions bar), the set-up dashboard and the add-a-person dialog.
+- `_lib`: `store.ts` (state), `data.ts` (choices, validation, CSV reading, sample business), `history.ts` (sample paydays and concerns), `nav.tsx` (links and routing for both builds).
+
+Not settled by the product brief, so assumed in the prototype: how workers give consent to texts, the time of day the check-in goes out, and the wording of the payday text in both languages, which still needs legal and native-speaker review.
 
 ## The stack
 
