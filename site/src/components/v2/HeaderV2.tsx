@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import { nav, site } from "@/lib/content";
+import { useCopy } from "@/components/v2/variant";
 import { Logo } from "@/components/bits";
 
 const LANGS = [
@@ -47,6 +47,7 @@ export function LanguageToggle({ className = "", round = false }: { className?: 
 
 // Wordmark on the left, everything else gathered on the right.
 export default function HeaderV2() {
+  const { nav, site } = useCopy();
   const [solid, setSolid] = useState(false);
   const [open, setOpen] = useState(false);
 

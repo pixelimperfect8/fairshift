@@ -53,7 +53,8 @@ Where a project has an `AGENTS.md`, it points at the Next.js docs shipped in `no
 
 ## Where things are in the site
 
-- `site/src/lib/content.ts`: all the copy for both versions.
+- `site/src/lib/content.ts`: all the copy for versions 1 and 2.
+- `site/src/lib/content-v2a.ts`: version 2-A's own copy, written to the voice and messaging guide. The v2 sections read their words through `useCopy()` in `site/src/components/v2/variant.tsx`, so version 2 keeps the copy in `content.ts`.
 - `site/src/app/globals.css`: version 1 tokens and styles first, then version 2 styles scoped under `.v2`.
 - `site/src/app/(v1)` and `site/src/components/*.tsx`: version 1.
 - `site/src/app/(v2)` and `site/src/components/v2`: version 2.

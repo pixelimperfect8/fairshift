@@ -5,7 +5,7 @@ import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-
 import { ease, useStill } from "@/lib/motion";
 import Photo from "@/components/v2/Photo";
 import { TwoTone } from "@/components/v2/Type";
-import { useVariant, type Variant } from "@/components/v2/variant";
+import { useCopy, useVariant, type Variant } from "@/components/v2/variant";
 
 type Scene = Variant["scenes"][number];
 
@@ -30,13 +30,14 @@ export default function Scenes() {
   const ref = useRef<HTMLDivElement>(null);
   const still = useStill();
   const S = useVariant().scenes;
+  const head = useCopy().heads.scenes;
   const [on, setOn] = useState(0);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   useMotionValueEvent(scrollYProgress, "change", (v) => setOn(Math.min(S.length - 1, Math.max(0, Math.floor(v * S.length)))));
 
   const stacked = (
     <div className="wrap sec">
-      <TwoTone bright="Three questions." dim="Sixty seconds. Every payday." className="h2" />
+      <TwoTone bright={head.bright} dim={head.dim} className="h2" />
       <div className="sec-body space-y-3">
         {S.map((s) => (
           <div key={s.photo} className="grain relative flex min-h-[32rem] flex-col justify-end overflow-hidden rounded-lg p-6">
@@ -67,7 +68,7 @@ export default function Scenes() {
       <div ref={ref} className="hidden md:block" style={{ height: `${S.length * 90}svh` }}>
         <div className="sticky top-0 flex h-[100svh] flex-col gap-[clamp(1.5rem,3vw,2.5rem)] px-3 pb-3 pt-28 lg:px-4 lg:pb-4">
           <div className="wrap !px-[clamp(1rem,2.6vw,1.75rem)]">
-            <TwoTone bright="Three questions." dim="Sixty seconds. Every payday." className="h2" />
+            <TwoTone bright={head.bright} dim={head.dim} className="h2" />
           </div>
 
           <div className="flex min-h-0 flex-1 gap-3">

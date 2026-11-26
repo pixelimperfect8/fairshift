@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { useStill } from "@/lib/motion";
-import { v3 } from "@/lib/content";
+import { useCopy } from "@/components/v2/variant";
 
 function Word({ children, p, from, to, floor }: { children: string; p: MotionValue<number>; from: number; to: number; floor: number }) {
   const opacity = useTransform(p, [from, to], [0.12, floor]);
@@ -15,6 +15,7 @@ function Word({ children, p, from, to, floor }: { children: string; p: MotionVal
 export default function Statement() {
   const ref = useRef<HTMLParagraphElement>(null);
   const still = useStill();
+  const { v3 } = useCopy();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 85%", "end 50%"] });
   const a = v3.statement.bright.split(" ");
   const b = v3.statement.dim.split(" ");

@@ -2,7 +2,8 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { site, v2, v2a } from "@/lib/content";
+import { v2a } from "@/lib/content";
+import { useCopy } from "@/components/v2/variant";
 import { ease, useStill } from "@/lib/motion";
 import Photo from "@/components/v2/Photo";
 import { TwoTone } from "@/components/v2/Type";
@@ -12,7 +13,8 @@ import { TwoTone } from "@/components/v2/Type";
 // frames rise at different speeds and each picture slides inside its frame.
 export default function HeroA() {
   const still = useStill();
-  const h = v2a.hero;
+  const { site, v2, v3 } = useCopy();
+  const h = { ...v3.hero, shots: v2a.hero.shots };
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   // the outer frames travel further than the middle one

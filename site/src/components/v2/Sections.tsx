@@ -4,13 +4,12 @@ import { useRef, useState } from "react";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { ArrowUpRight, Plus } from "lucide-react";
 import LoopArt from "@/components/v2/LoopArt";
-import { faq, features, footer, math, pricing, promises, site, stats, v2, v3, who } from "@/lib/content";
 import { ease, useStill } from "@/lib/motion";
 import { CountUp, Tween } from "@/components/bits";
 import Photo from "@/components/v2/Photo";
 import { Box } from "@/components/v2/Iso";
 import { TwoTone, Up } from "@/components/v2/Type";
-import { useVariant } from "@/components/v2/variant";
+import { useCopy, useVariant } from "@/components/v2/variant";
 
 /** The block every section opens with: a title on the left, a short paragraph on the right. */
 function Head({ title, dim, body, dark = false }: { title: string; dim?: string; body?: string; dark?: boolean }) {
@@ -29,10 +28,11 @@ function Head({ title, dim, body, dark = false }: { title: string; dim?: string;
 /* ------------------------------------------------------------------ */
 /* The loop: pinned. A Hairline figure on the right, the step beside it */
 /* ------------------------------------------------------------------ */
-const L = v3.loop.steps;
 const ART = ["text", "answer", "fix", "record"];
 
 function StepText({ i }: { i: number }) {
+  const { faq, features, footer, math, pricing, promises, site, stats, v2, v3, who, heads } = useCopy();
+  const L = v3.loop.steps;
   const s = L[i];
   return (
     <>
@@ -45,6 +45,8 @@ function StepText({ i }: { i: number }) {
 }
 
 export function Loop() {
+  const { faq, features, footer, math, pricing, promises, site, stats, v2, v3, who, heads } = useCopy();
+  const L = v3.loop.steps;
   const ref = useRef<HTMLDivElement>(null);
   const still = useStill();
   const [step, setStep] = useState(0);
@@ -116,6 +118,8 @@ export function Loop() {
 /* What the owner gets: an inset panel of rows that open               */
 /* ------------------------------------------------------------------ */
 export function Gets() {
+  const { faq, features, footer, math, pricing, promises, site, stats, v2, v3, who, heads } = useCopy();
+  const L = v3.loop.steps;
   const [on, setOn] = useState<number | null>(0);
   return (
     <section className="sec px-3 md:px-4">
@@ -161,6 +165,8 @@ export function Gets() {
 /* One number, said as a sentence, as large as it will go              */
 /* ------------------------------------------------------------------ */
 export function BigStat() {
+  const { faq, features, footer, math, pricing, promises, site, stats, v2, v3, who, heads } = useCopy();
+  const L = v3.loop.steps;
   return (
     <section className="wrap sec">
       <TwoTone bright={v3.stat.bright} dim={v3.stat.dim} className="display mx-auto max-w-[70rem] text-center text-[clamp(2.3rem,6.4vw,6rem)]" />
@@ -178,7 +184,9 @@ export function BigStat() {
           );
         })}
       </div>
-      <p className="mx-auto mt-[clamp(2rem,3.5vw,3rem)] max-w-[44rem] text-center text-[0.82rem] text-mute">Notice figures: {stats.items[0].source} and {stats.items[1].source}. {stats.industries}</p>
+      {stats.industries && (
+        <p className="mx-auto mt-[clamp(2rem,3.5vw,3rem)] max-w-[44rem] text-center text-[0.82rem] text-mute">Notice figures: {stats.items[0].source} and {stats.items[1].source}. {stats.industries}</p>
+      )}
     </section>
   );
 }
@@ -187,6 +195,8 @@ export function BigStat() {
 /* Languages: the same greeting, drifting past in six of them          */
 /* ------------------------------------------------------------------ */
 export function Languages() {
+  const { faq, features, footer, math, pricing, promises, site, stats, v2, v3, who, heads } = useCopy();
+  const L = v3.loop.steps;
   const g = [...features.greetings, ...features.greetings];
   return (
     <section aria-label="Works in the language your team speaks" className="langs rule-t rule-b overflow-hidden py-[clamp(2rem,3.5vw,3rem)]">
@@ -213,6 +223,8 @@ const TALLEST = PENALTY * 250 * 52;
 const PANEL = "var(--color-paper-2)";
 
 export function MathV2() {
+  const { faq, features, footer, math, pricing, promises, site, stats, v2, v3, who, heads } = useCopy();
+  const L = v3.loop.steps;
   const [n, setN] = useState(50);
   const [sched, setSched] = useState(1);
   const periods = math.schedules[sched].periods;
@@ -229,7 +241,7 @@ export function MathV2() {
 
   return (
     <section id="math" className="wrap sec scroll-mt-10">
-      <Head title="The math is brutal." dim="The reform rewards the careful." body={math.body} />
+      <Head title={heads.math.bright} dim={heads.math.dim} body={math.body} />
       <Up className="sec-body grid gap-6 lg:grid-cols-12">
         <div className="flex flex-col justify-between gap-10 lg:col-span-4">
           <div>
@@ -277,11 +289,13 @@ export function MathV2() {
 /* Who it's for: four names, one open at a time                        */
 /* ------------------------------------------------------------------ */
 export function WhoV2() {
+  const { faq, features, footer, math, pricing, promises, site, stats, v2, v3, who, heads } = useCopy();
+  const L = v3.loop.steps;
   const [on, setOn] = useState(0);
   return (
     <section id="who" className="on-dark scroll-mt-10 bg-ink text-paper">
       <div className="wrap sec">
-        <Head title="Designed for the employee." dim="Sold to the owner. Carried by the agent." dark />
+        <Head title={heads.who.bright} dim={heads.who.dim} dark />
         <div className="sec-body">
           {who.tabs.map((t, i) => {
             const open = i === on;
@@ -360,10 +374,12 @@ export function Trades() {
 /* The limits: a ruled grid of things it will never do                 */
 /* ------------------------------------------------------------------ */
 export function Limits() {
+  const { faq, features, footer, math, pricing, promises, site, stats, v2, v3, who, heads } = useCopy();
+  const L = v3.loop.steps;
   return (
     <section className="sec px-3 md:px-4">
       <div className="rounded-lg bg-paper-2 px-[clamp(1.25rem,4vw,3.5rem)] py-[clamp(3rem,5.5vw,5rem)]">
-        <Head title="What FairShift" dim="will never do." body={promises.body} />
+        <Head title={heads.limits.bright} dim={heads.limits.dim} body={promises.body} />
         <ul className="sec-body grid gap-x-6 sm:grid-cols-2 lg:grid-cols-4">
           {promises.items.map((p, i) => (
             <Up key={p.title} delay={(i % 4) * 0.06} className="rule-t py-6">
@@ -384,10 +400,12 @@ export function Limits() {
 /* Pricing: three ruled rows                                           */
 /* ------------------------------------------------------------------ */
 export function PricingV2() {
+  const { faq, features, footer, math, pricing, promises, site, stats, v2, v3, who, heads } = useCopy();
+  const L = v3.loop.steps;
   return (
     <section id="pricing" className="on-dark scroll-mt-10 bg-ink text-paper">
       <div className="wrap sec">
-        <Head title="Priced per employee," dim="per pay period." body={pricing.body} dark />
+        <Head title={heads.pricing.bright} dim={heads.pricing.dim} body={pricing.body} dark />
         <div className="sec-body rule-b">
           {pricing.plans.map((p, i) => (
             <Up key={p.key} delay={i * 0.06} className="rule-t grid items-center gap-x-6 gap-y-3 py-8 lg:grid-cols-12">
@@ -420,13 +438,15 @@ export function PricingV2() {
 /* Questions: a plain ruled list beside a heading that stays put       */
 /* ------------------------------------------------------------------ */
 export function FaqV2() {
+  const { faq, features, footer, math, pricing, promises, site, stats, v2, v3, who, heads } = useCopy();
+  const L = v3.loop.steps;
   const [open, setOpen] = useState<number | null>(0);
   return (
     <section id="faq" className="wrap sec scroll-mt-10">
       <div className="grid gap-6 lg:grid-cols-12">
         <div className="lg:col-span-4">
           <div className="lg:sticky lg:top-28">
-            <TwoTone bright="Straight" dim="answers." className="h2" />
+            <TwoTone bright={heads.faq.bright} dim={heads.faq.dim} className="h2" />
             <Up delay={0.15}>
               <p className="lede mt-5 text-mute">{faq.body}</p>
               <a href={`mailto:${site.contactEmail}`} className="btn btn-ink mt-7">
@@ -466,6 +486,8 @@ export function FaqV2() {
 /* The last shot, then the name set as large as it goes                */
 /* ------------------------------------------------------------------ */
 export function ClosingV2() {
+  const { faq, features, footer, math, pricing, promises, site, stats, v2, v3, who, heads } = useCopy();
+  const L = v3.loop.steps;
   const c = v2.closing;
   const shot = useVariant().closing;
   return (
@@ -494,6 +516,8 @@ export function ClosingV2() {
 }
 
 export function FooterV2() {
+  const { faq, features, footer, math, pricing, promises, site, stats, v2, v3, who, heads } = useCopy();
+  const L = v3.loop.steps;
   const still = useStill();
   return (
     <footer className="on-dark overflow-hidden bg-ink text-paper">

@@ -597,11 +597,11 @@ export const v2a = {
   hero: {
     bright: "Your team has something to tell you.",
     dim: "FairShift asks for you, every payday.",
-    body: "Three questions by text, to every crew you run: the kitchen, the workshop, the route. One page telling you what to fix, and a dated record showing you asked, listened and fixed it.",
+    body: "FairShift texts your crew a few optional questions each payday, flags anything that needs attention, and keeps a dated record of how you addressed it.",
     shots: [
       { photo: "1651977560788-98792cd34da0", alt: "A line cook working at a busy restaurant counter", label: "Kitchen crews" },
-      { photo: "1687422810663-c316494f725a", alt: "A carpenter smiling at his bench in a timber workshop", label: "Field and shop crews" },
-      { photo: "1764745222277-89b2d45381b3", alt: "A courier cycling through the city with a delivery bag", label: "Drivers and contractors" },
+      { photo: "1626906722163-bd4c03cb3b9b", alt: "Farm workers picking a crop by hand", label: "Field crews" },
+      { photo: "1764745222277-89b2d45381b3", alt: "A courier cycling through the city with a delivery bag", label: "Drivers and couriers" },
     ],
   },
   scenes: [
@@ -610,13 +610,13 @@ export const v2a = {
     { photo: "1609348632802-b952f368fc3a", alt: "A welder kneeling over a job in a workshop" },
   ],
   trades: {
-    title: "For the people who work on their feet.",
-    body: "Kitchens, workshops, job sites and routes. Wherever the work happens out of your sight, an owner is least likely to hear about a problem in time.",
+    title: "Farms first. Then every hourly team.",
+    body: "We're starting with farms and agriculture, then other hourly teams: kitchens, workshops, job sites and routes. Phones over laptops, short words over long ones.",
     items: [
       { photo: "1576704546872-8d647cd96f8d", alt: "A cook working over steam in a busy open kitchen", name: "Kitchens" },
       { photo: "1676018366904-c083ed678e60", alt: "A mechanic at the bench in a warmly lit garage", name: "Garages" },
       { photo: "1745267652572-573ae6e81e40", alt: "A builder in a hard hat working in low light on site", name: "Job sites" },
-      { photo: "1626906722163-bd4c03cb3b9b", alt: "Farm workers picking a crop by hand", name: "Fields" },
+      { photo: "1687422810663-c316494f725a", alt: "A carpenter smiling at his bench in a timber workshop", name: "Workshops" },
       { photo: "1764745222236-42ba3e0733b9", alt: "A courier riding through city traffic with a delivery bag", name: "Delivery" },
       { photo: "1736955075954-fba0a07c5118", alt: "A driver at the wheel of a truck", name: "Drivers" },
       { photo: "1605497787865-e6d4762b386f", alt: "A barber drying a client's hair under warm lights", name: "Salons" },
