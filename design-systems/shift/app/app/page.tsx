@@ -1,11 +1,17 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { ArrowRight01Icon } from "@hugeicons/core-free-icons"
+import { ArrowRight01Icon, Search01Icon } from "@hugeicons/core-free-icons"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group"
 import { toast } from "@/components/ui/toast"
 
 import { nextStep, rosterReady, stepHref } from "./_components/shell"
@@ -159,6 +165,7 @@ function StepRow({
 // sample ones, worked out from the roster so the numbers agree with each other.
 function SetUp({ state }: { state: State }) {
   const { profile, workers, sampleAddressed } = state
+  const [query, setQuery] = useState("")
   const total = workers.length
   const lastPayday = previousPaydayISO(profile.nextPayday, profile.schedule)
   const day = (offset: number) => formatDate(addDaysISO(lastPayday, offset), "short")
@@ -217,6 +224,16 @@ function SetUp({ state }: { state: State }) {
       when: day(-14),
     },
   ]
+
+  const q = query.trim().toLowerCase()
+  const shownRecord = q
+    ? record.filter((a) =>
+        [a.what, a.where, a.did, a.when, profile.contactName]
+          .join(" ")
+          .toLowerCase()
+          .includes(q)
+      )
+    : record
 
   return (
     <>
@@ -303,8 +320,33 @@ function SetUp({ state }: { state: State }) {
             <h2 id="your-record" className="type-row">
               Your record
             </h2>
-            <ul className="mt-4 border-t">
-              {record.map((a) => (
+            <InputGroup className="mt-4">
+              <InputGroupInput
+                type="search"
+                aria-label="Search your record"
+                placeholder="Search by concern, location, person or date"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+              <InputGroupAddon>
+                <HugeiconsIcon icon={Search01Icon} strokeWidth={2} />
+              </InputGroupAddon>
+            </InputGroup>
+            {shownRecord.length === 0 && (
+              <div className="mt-4 border-y py-8">
+                <p className="type-body">
+                  Nothing in your record matches &ldquo;{query.trim()}&rdquo;.
+                </p>
+                <p className="type-small mt-1 text-muted-foreground">
+                  Check the spelling, or clear the search to see everything.
+                </p>
+                <Button variant="outline" className="mt-4" onClick={() => setQuery("")}>
+                  Clear search
+                </Button>
+              </div>
+            )}
+            <ul className={shownRecord.length ? "mt-4 border-t" : "hidden"}>
+              {shownRecord.map((a) => (
                 <li
                   key={a.what}
                   className="flex items-start justify-between gap-4 border-b py-4"
