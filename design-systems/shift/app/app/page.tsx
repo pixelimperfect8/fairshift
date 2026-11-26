@@ -345,7 +345,7 @@ function SetUp({ state }: { state: State }) {
                 </Button>
               </div>
             )}
-            <ul className={shownRecord.length ? "mt-4 border-t" : "hidden"}>
+            <ul className={shownRecord.length ? "mt-1" : "hidden"}>
               {shownRecord.map((a) => (
                 <li
                   key={a.what}
