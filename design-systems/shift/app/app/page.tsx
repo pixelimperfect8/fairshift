@@ -13,9 +13,7 @@ import {
   daysFromToday,
   formatDate,
   formatShort,
-  labelOf,
   plural,
-  schedules,
 } from "./_lib/data"
 import { setState, usePrototype, type State } from "./_lib/store"
 
@@ -235,19 +233,7 @@ function SetUp({ state }: { state: State }) {
       </div>
 
       <main className="fs-wrap py-12 sm:py-16">
-        <dl className="grid gap-x-6 sm:grid-cols-3">
-          <Stat
-            value={formatDate(profile.nextPayday, "short")}
-            label={`Next payday · ${labelOf(schedules, profile.schedule).toLowerCase()}`}
-          />
-          <Stat
-            value={String(total)}
-            label={`${total === 1 ? "Worker" : "Workers"} on the roster`}
-          />
-          <Stat value={profile.contactName} label="Hears about concerns" small />
-        </dl>
-
-        <section aria-labelledby="sample-results" className="mt-16 sm:mt-20">
+        <section aria-labelledby="sample-results">
           <h2 id="sample-results" className="type-step">
             After payday, this fills in.
           </h2>
@@ -322,20 +308,17 @@ function Stat({
   value,
   label,
   tone,
-  small,
 }: {
   value: string
   label: string
   tone?: "warning" | "success"
-  small?: boolean
 }) {
   return (
     <div className="flex flex-col-reverse justify-end border-t py-5">
       <dt className="type-small mt-1 text-muted-foreground">{label}</dt>
       <dd
         className={[
-          small ? "type-step sm:pt-3" : "type-heading",
-          "tabular-nums",
+          "type-heading tabular-nums",
           tone === "warning" ? "text-warning" : tone === "success" ? "text-success" : "",
         ].join(" ")}
       >
