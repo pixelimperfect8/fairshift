@@ -33,3 +33,13 @@
   margin-inline: auto;
   padding-inline: clamp(1.25rem, 4vw, 2.5rem);
 }
+
+/* A setup step pins its actions to the bottom of the screen. Leave room under
+   the page footer so its last line is never behind that bar. */
+.fs-app:has([data-step-actions]) > footer {
+  padding-bottom: 4.5rem;
+}
+/* Toasts rise above the bar instead of covering its buttons. */
+body:has([data-step-actions]) [data-slot="toast-viewport"] {
+  bottom: 5.5rem;
+}

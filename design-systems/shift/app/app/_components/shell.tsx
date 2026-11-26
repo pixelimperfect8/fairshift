@@ -17,7 +17,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="fs-app flex flex-col">
-      <header className="fs-band border-b">
+      <header className="fs-band sticky top-0 z-40 border-b">
         <div className="fs-wrap flex h-16 items-center justify-between gap-4">
           <Link
             href="/app"
@@ -167,33 +167,63 @@ export function SetupFrame({
   )
 }
 
-/** Back on the left, the one blue action on the right. On a phone the action comes first. */
+/**
+ * Back on the left, the one blue action on the right, in a bar fixed to the
+ * bottom of the screen so the next step is always in reach. A spacer holds its
+ * place in the page; prototype.css keeps the page footer clear of it.
+ */
 export function StepActions({
   back,
   children,
   note,
 }: {
-  back?: { href: string; label: string }
-  children: React.ReactNode
+  back?: { label: string; href?: string; onClick?: () => void }
+  children?: React.ReactNode
   note?: React.ReactNode
 }) {
+  const backLabel = back && (
+    <>
+      <span className="sm:hidden">Back</span>
+      <span className="max-sm:hidden">{back.label}</span>
+    </>
+  )
   return (
-    <div className="mt-12 border-t pt-6">
-      {note && <div className="mb-5">{note}</div>}
-      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
-        {back ? (
-          <Button
-            variant="ghost"
-            nativeButton={false}
-            render={<Link href={back.href} />}
-          >
-            {back.label}
-          </Button>
-        ) : (
-          <span />
-        )}
-        {children}
+    <>
+      <div aria-hidden className="h-10" />
+      <div
+        data-step-actions
+        className="fixed inset-x-0 bottom-0 z-40 border-t bg-background"
+      >
+        <div className="fs-wrap py-3">
+          {note && <div className="mb-3">{note}</div>}
+          <div className="flex items-center justify-between gap-3">
+            {back?.href ? (
+              <Button
+                variant="ghost"
+                className="max-sm:-ml-3 max-sm:px-3"
+                aria-label={back.label}
+                nativeButton={false}
+                render={<Link href={back.href} />}
+              >
+                {backLabel}
+              </Button>
+            ) : back ? (
+              <Button
+                type="button"
+                variant="ghost"
+                className="max-sm:-ml-3 max-sm:px-3"
+                aria-label={back.label}
+                onClick={back.onClick}
+              >
+                {backLabel}
+              </Button>
+            ) : (
+              <span />
+            )}
+            {children}
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   )
 }

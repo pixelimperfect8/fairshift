@@ -352,26 +352,23 @@ export default function WorkersPage() {
             })}
           </div>
 
-          <StepActions>
-            <div className="flex flex-col-reverse gap-3 sm:flex-row">
-              <Button
-                variant="ghost"
-                onClick={() => {
-                  setSheet(null)
-                  setView("upload")
-                }}
-              >
-                Choose a different file
-              </Button>
-              <Button
-                onClick={() => {
-                  setMapTried(true)
-                  if (mapping.name && mapping.mobile) setView("preview")
-                }}
-              >
-                Preview rows
-              </Button>
-            </div>
+          <StepActions
+            back={{
+              label: "Choose a different file",
+              onClick: () => {
+                setSheet(null)
+                setView("upload")
+              },
+            }}
+          >
+            <Button
+              onClick={() => {
+                setMapTried(true)
+                if (mapping.name && mapping.mobile) setView("preview")
+              }}
+            >
+              Preview rows
+            </Button>
           </StepActions>
         </div>
       )}
@@ -389,15 +386,10 @@ export default function WorkersPage() {
             <RosterRows rows={preview} />
           </div>
 
-          <StepActions>
-            <div className="flex flex-col-reverse gap-3 sm:flex-row">
-              <Button variant="ghost" onClick={() => setView("map")}>
-                Change columns
-              </Button>
-              <Button onClick={importRows}>
-                Add {plural(preview.length, "person", "people")} to the roster
-              </Button>
-            </div>
+          <StepActions back={{ label: "Change columns", onClick: () => setView("map") }}>
+            <Button onClick={importRows}>
+              Add {plural(preview.length, "person", "people")} to the roster
+            </Button>
           </StepActions>
         </div>
       )}
