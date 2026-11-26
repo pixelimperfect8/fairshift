@@ -133,7 +133,7 @@ export function Dashboard({ state }: { state: State }) {
               Past paydays
             </h2>
             <p className="type-small mt-1 text-muted-foreground">
-              Choose one to see who answered and what was raised.
+              Choose one to see who answered.
             </p>
             <ul className="mt-4 border-t">
               {paydays.map((p) => {
