@@ -1,6 +1,6 @@
 "use client"
 
-import Link from "next/link"
+import { useEffect } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { ArrowRight01Icon } from "@hugeicons/core-free-icons"
 
@@ -9,10 +9,24 @@ import { Button } from "@/components/ui/button"
 import { Dashboard } from "./_components/dashboard"
 import { nextStep, rosterReady, stepHref } from "./_components/shell"
 import { plural } from "./_lib/data"
+import { Link, SINGLE, useScreen } from "./_lib/nav"
 import { usePrototype, type State } from "./_lib/store"
+import BusinessProfilePage from "./setup/business/page"
+import ReviewPage from "./setup/review/page"
+import WorkersPage from "./setup/workers/page"
 
 export default function DashboardPage() {
   const state = usePrototype()
+  const screen = useScreen()
+
+  // the one-page build changes screen without a page load: start each at the top
+  useEffect(() => {
+    if (SINGLE) window.scrollTo({ top: 0, behavior: "instant" })
+  }, [screen])
+
+  if (SINGLE && screen === "business") return <BusinessProfilePage />
+  if (SINGLE && screen === "workers") return <WorkersPage />
+  if (SINGLE && screen === "review") return <ReviewPage />
   return state.live ? <Dashboard state={state} /> : <FirstVisit state={state} />
 }
 

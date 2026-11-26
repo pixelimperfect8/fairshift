@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useRef, useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter } from "../../_lib/nav"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   Delete02Icon,

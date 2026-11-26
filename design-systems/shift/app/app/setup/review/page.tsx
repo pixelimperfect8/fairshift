@@ -1,8 +1,8 @@
 "use client"
 
 import { useEffect } from "react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { Link } from "../../_lib/nav"
+import { useRouter } from "../../_lib/nav"
 
 import { Bubble, BubbleContent, BubbleGroup } from "@/components/ui/bubble"
 import { Button } from "@/components/ui/button"
