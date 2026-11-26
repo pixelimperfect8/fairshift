@@ -130,7 +130,7 @@ export function Dashboard({ state }: { state: State }) {
         <div className="grid gap-x-16 gap-y-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)]">
           <section aria-labelledby="past-paydays">
             <h2 id="past-paydays" className="type-row">
-              Past paydays
+              Paydays
             </h2>
             <p className="type-small mt-1 text-muted-foreground">
               Choose one to see who answered.
