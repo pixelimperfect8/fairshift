@@ -168,8 +168,8 @@ export function BigStat() {
         {v3.stat.rest.map((k, i) => {
           const s = stats.items[k];
           return (
-            <Up key={s.label} delay={i * 0.08} className="rule-t grid grid-cols-[auto_1fr] items-baseline gap-x-6 py-7">
-              <CountUp to={s.value} prefix={s.prefix} suffix={s.suffix} className="display text-[clamp(2.6rem,5vw,4.4rem)]" />
+            <Up key={s.label} delay={i * 0.08} className="rule-t grid grid-cols-[auto_1fr] items-center gap-x-6 py-7">
+              <CountUp to={s.value} prefix={s.prefix} suffix={s.suffix} className="display text-[clamp(2.6rem,5vw,4.4rem)] !leading-none" />
               <div>
                 <p className="text-[1.05rem] leading-snug">{s.label}</p>
                 <p className="mt-2 text-[0.82rem] text-mute">Source: {s.source}</p>
@@ -178,7 +178,7 @@ export function BigStat() {
           );
         })}
       </div>
-      <p className="mt-2 text-[0.82rem] text-mute">Notice figures: {stats.items[0].source} and {stats.items[1].source}. {stats.industries}</p>
+      <p className="mx-auto mt-[clamp(2rem,3.5vw,3rem)] max-w-[44rem] text-center text-[0.82rem] text-mute">Notice figures: {stats.items[0].source} and {stats.items[1].source}. {stats.industries}</p>
     </section>
   );
 }
