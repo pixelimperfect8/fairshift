@@ -70,6 +70,20 @@ const parseISO = (iso: string) => {
   return new Date(y, m - 1, d)
 }
 
+/** The payday before this one, going by the schedule. */
+export function previousPaydayISO(iso: string, schedule: string) {
+  const d = parseISO(iso)
+  if (schedule === "monthly") d.setMonth(d.getMonth() - 1)
+  else d.setDate(d.getDate() - (schedule === "weekly" ? 7 : schedule === "biweekly" ? 14 : 15))
+  return toISO(d)
+}
+
+export function addDaysISO(iso: string, n: number) {
+  const d = parseISO(iso)
+  d.setDate(d.getDate() + n)
+  return toISO(d)
+}
+
 export function daysFromToday(n: number) {
   const d = new Date()
   d.setDate(d.getDate() + n)

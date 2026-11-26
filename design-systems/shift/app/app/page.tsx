@@ -10,10 +10,11 @@ import { toast } from "@/components/ui/toast"
 
 import { nextStep, rosterReady, stepHref } from "./_components/shell"
 import {
-  daysFromToday,
+  addDaysISO,
   formatDate,
   formatShort,
   plural,
+  previousPaydayISO,
 } from "./_lib/data"
 import { setState, usePrototype, type State } from "./_lib/store"
 
@@ -154,23 +155,39 @@ function StepRow({
 
 // ---- set up ------------------------------------------------------------------
 
+// What the dashboard looks like once a payday has gone by. The results are
+// sample ones, worked out from the roster so the numbers agree with each other.
 function SetUp({ state }: { state: State }) {
   const { profile, workers, sampleAddressed } = state
   const total = workers.length
-  const locationCount = new Set(workers.map((w) => w.location)).size
-  const [firstLocation, secondLocation = firstLocation] = profile.locations.map((l) => l.name)
+  const lastPayday = previousPaydayISO(profile.nextPayday, profile.schedule)
+  const day = (offset: number) => formatDate(addDaysISO(lastPayday, offset), "short")
 
-  // The sample results are scaled to the roster, so the numbers agree with each other.
-  const quiet = total > 1 ? Math.max(1, Math.round(total * 0.16)) : 0
+  // who answered, by location: the people who stayed quiet come off the biggest crews first
+  const byLocation = profile.locations
+    .map((l) => ({
+      name: l.name,
+      total: workers.filter((w) => w.location === l.name).length,
+      quiet: 0,
+    }))
+    .filter((l) => l.total > 0)
+  let quiet = total > 1 ? Math.max(1, Math.round(total * 0.16)) : 0
   const answered = total - quiet
+  for (; quiet > 0 && byLocation.length; quiet--) {
+    const crew = [...byLocation].sort((a, b) => b.total - b.quiet - (a.total - a.quiet))[0]
+    crew.quiet++
+  }
+  const firstLocation = byLocation[0]?.name ?? ""
+  const secondLocation = byLocation[1]?.name ?? firstLocation
+
   const open = sampleAddressed ? 0 : 1
   const addressedCount = sampleAddressed ? 4 : 3
 
   const openConcern = {
-    what: `Two people at ${firstLocation} said they missed a meal break on ${formatShort(daysFromToday(-3))}.`,
+    what: `Two people at ${firstLocation} said they missed a meal break on ${day(-2)}.`,
     next: "Add one hour of premium pay for each of them to the next check, then go over that day's schedule with the crew lead.",
   }
-  const addressed = [
+  const record = [
     ...(sampleAddressed
       ? [
           {
@@ -185,19 +202,19 @@ function SetUp({ state }: { state: State }) {
       what: "Overtime missing from one check",
       where: secondLocation,
       did: "Hours corrected and paid on the next check.",
-      when: formatShort(daysFromToday(-9)),
+      when: day(-6),
     },
     {
       what: "Drinking water ran low by mid-afternoon",
       where: firstLocation,
       did: "Second water cooler added to the crew truck.",
-      when: formatShort(daysFromToday(-12)),
+      when: day(-9),
     },
     {
       what: "Torn shade canopy",
       where: firstLocation,
       did: "Canopy replaced the same day.",
-      when: formatShort(daysFromToday(-17)),
+      when: day(-14),
     },
   ]
 
@@ -205,14 +222,20 @@ function SetUp({ state }: { state: State }) {
     <>
       <div className="fs-band">
         <div className="fs-wrap py-12 sm:py-16">
-          <p className="type-small text-muted-foreground">{profile.name}</p>
+          <p className="type-small text-muted-foreground">
+            {profile.name} · payday check-in, {formatDate(lastPayday)}
+          </p>
           <h1 className="type-heading mt-3 max-w-[52rem]">
-            Your first check-in goes out {formatDate(profile.nextPayday)}.{" "}
+            {answered} of {total} answered.{" "}
             <span className="dim">
-              {plural(total, "worker", "workers")} across{" "}
-              {plural(locationCount, "location", "locations")} will get it.
+              {open ? `${plural(open, "concern", "concerns")} open.` : "No concerns open."}{" "}
+              {addressedCount} addressed this month.
             </span>
           </h1>
+          <p className="type-lede mt-6 max-w-[40rem] text-muted-foreground">
+            The next check-in goes out {formatDate(profile.nextPayday)} to{" "}
+            {plural(total, "worker", "workers")}.
+          </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Button
               variant="outline"
@@ -233,97 +256,74 @@ function SetUp({ state }: { state: State }) {
       </div>
 
       <main className="fs-wrap py-12 sm:py-16">
-        <section aria-labelledby="sample-results">
-          <h2 id="sample-results" className="type-step">
-            After payday, this fills in.
-          </h2>
-          <p className="type-body mt-3 max-w-[40rem] text-muted-foreground">
-            These are sample results so you can see how it reads. Yours replace
-            them after {formatDate(profile.nextPayday)}.
-          </p>
-
-          <dl className="mt-10 grid gap-x-6 sm:grid-cols-3">
-            <Stat value={`${answered} of ${total}`} label="answered" />
-            <Stat
-              value={String(open)}
-              label={open === 1 ? "concern open" : "concerns open"}
-              tone={open ? "warning" : undefined}
-            />
-            <Stat value={String(addressedCount)} label="addressed this month" tone="success" />
-          </dl>
-
-          {!sampleAddressed && (
-            <div className="mt-10 rounded-xl bg-card p-6 sm:p-8">
-              <Badge variant="warning">Open</Badge>
-              <p className="type-row mt-4 max-w-[44rem]">{openConcern.what}</p>
-              <div className="mt-6 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-                <div className="max-w-[36rem]">
-                  <p className="type-label">Suggested next step</p>
-                  <p className="type-body mt-1 text-muted-foreground">{openConcern.next}</p>
-                </div>
-                <Button
-                  className="shrink-0"
-                  onClick={() => {
-                    setState((s) => ({ ...s, sampleAddressed: true }))
-                    toast.add({
-                      type: "success",
-                      title: "Marked as addressed",
-                      description: "Saved to your record with your name and today's date.",
-                    })
-                  }}
-                >
-                  Mark as addressed
-                </Button>
+        {!sampleAddressed && (
+          <section aria-label="Open concern" className="mb-14 rounded-xl bg-card p-6 sm:p-8">
+            <Badge variant="warning">Open</Badge>
+            <p className="type-row mt-4 max-w-[44rem]">{openConcern.what}</p>
+            <div className="mt-6 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+              <div className="max-w-[36rem]">
+                <p className="type-label">Suggested next step</p>
+                <p className="type-body mt-1 text-muted-foreground">{openConcern.next}</p>
               </div>
-            </div>
-          )}
-
-          <h3 className="type-row mt-12">Your record</h3>
-          <ul className="mt-4 border-t">
-            {addressed.map((a) => (
-              <li
-                key={a.what}
-                className="grid gap-x-6 gap-y-1 border-b py-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_auto] sm:items-center"
+              <Button
+                className="shrink-0"
+                onClick={() => {
+                  setState((s) => ({ ...s, sampleAddressed: true }))
+                  toast.add({
+                    type: "success",
+                    title: "Marked as addressed",
+                    description: "Saved to your record with your name and today's date.",
+                  })
+                }}
               >
-                <div>
-                  <p className="type-label">{a.what}</p>
-                  <p className="type-small text-muted-foreground">{a.where}</p>
+                Mark as addressed
+              </Button>
+            </div>
+          </section>
+        )}
+
+        <div className="grid gap-x-16 gap-y-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)]">
+          <section aria-labelledby="who-answered">
+            <h2 id="who-answered" className="type-row">
+              Who answered
+            </h2>
+            <dl className="mt-4 border-t">
+              {byLocation.map((l) => (
+                <div key={l.name} className="flex items-baseline justify-between gap-4 border-b py-4">
+                  <dt className="type-label">{l.name}</dt>
+                  <dd className="type-small text-muted-foreground tabular-nums">
+                    {l.total - l.quiet} of {l.total}
+                  </dd>
                 </div>
-                <p className="type-small text-muted-foreground">
-                  {a.did} {profile.contactName}, {a.when}.
-                </p>
-                <Badge variant="success" className="max-sm:mt-1">
-                  Addressed
-                </Badge>
-              </li>
-            ))}
-          </ul>
-        </section>
+              ))}
+            </dl>
+          </section>
+
+          <section aria-labelledby="your-record">
+            <h2 id="your-record" className="type-row">
+              Your record
+            </h2>
+            <ul className="mt-4 border-t">
+              {record.map((a) => (
+                <li
+                  key={a.what}
+                  className="flex items-start justify-between gap-4 border-b py-4"
+                >
+                  <div className="min-w-0">
+                    <p className="type-label">{a.what}</p>
+                    <p className="type-small mt-0.5 text-muted-foreground">
+                      {a.where} · {a.did} {profile.contactName}, {a.when}.
+                    </p>
+                  </div>
+                  <Badge variant="success" className="mt-0.5">
+                    Addressed
+                  </Badge>
+                </li>
+              ))}
+            </ul>
+          </section>
+        </div>
       </main>
     </>
-  )
-}
-
-function Stat({
-  value,
-  label,
-  tone,
-}: {
-  value: string
-  label: string
-  tone?: "warning" | "success"
-}) {
-  return (
-    <div className="flex flex-col-reverse justify-end border-t py-5">
-      <dt className="type-small mt-1 text-muted-foreground">{label}</dt>
-      <dd
-        className={[
-          "type-heading tabular-nums",
-          tone === "warning" ? "text-warning" : tone === "success" ? "text-success" : "",
-        ].join(" ")}
-      >
-        {value}
-      </dd>
-    </div>
   )
 }
